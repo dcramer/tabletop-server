@@ -9,3 +9,6 @@ setup-git:
 
 install-requirements:
 	pipenv install
+
+test:
+	pipenv run py.test
