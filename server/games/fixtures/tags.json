@@ -1,0 +1,47 @@
+[
+{
+  "model": "games.tag",
+  "pk": "620dfa6f-1cbf-4f45-ba1d-f2673288dce0",
+  "fields": {
+    "name": "Casual",
+    "created_at": "2018-08-09T22:46:16.683Z",
+    "created_by": null
+  }
+},
+{
+  "model": "games.tag",
+  "pk": "6473acbf-2095-4829-9dff-0458ae46f850",
+  "fields": {
+    "name": "Party",
+    "created_at": "2018-08-09T22:46:16.682Z",
+    "created_by": null
+  }
+},
+{
+  "model": "games.tag",
+  "pk": "6cdcd8dc-2815-456c-8e2a-3f25f6c1d060",
+  "fields": {
+    "name": "Cooperative",
+    "created_at": "2018-08-09T22:46:25.002Z",
+    "created_by": null
+  }
+},
+{
+  "model": "games.tag",
+  "pk": "785f58d9-2e90-4311-ae9d-3ab954af77fc",
+  "fields": {
+    "name": "Deck Builder",
+    "created_at": "2018-08-09T22:46:16.680Z",
+    "created_by": null
+  }
+},
+{
+  "model": "games.tag",
+  "pk": "7a566f2e-a254-418b-abaf-7f8d6f9b82f2",
+  "fields": {
+    "name": "Campaign",
+    "created_at": "2018-08-09T22:46:16.678Z",
+    "created_by": null
+  }
+}
+]
