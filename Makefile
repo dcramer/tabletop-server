@@ -8,7 +8,7 @@ setup-git:
 	git config --bool flake8.strict true
 
 install-requirements:
-	pipenv install
+	pipenv install --dev
 
 test:
 	pipenv run py.test
