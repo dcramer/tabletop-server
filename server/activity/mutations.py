@@ -62,6 +62,7 @@ class AddCheckIn(graphene.Mutation):
                 game=Game.objects.get(id=game), created_by=current_user
             )
             players = set(players or [])
+            # current user is always a player
             players.add(current_user.id)
             winners = set(winners) if winners is not None else None
             for player_id in players:
@@ -237,9 +238,9 @@ class UpdateCheckIn(graphene.Mutation):
                         )
                     player, created = Player.objects.get_or_create(
                         checkin=checkin,
-                        user=current_user
-                        if is_user
-                        else User.objects.get(id=player_id),
+                        user=(
+                            current_user if is_user else User.objects.get(id=player_id)
+                        ),
                         defaults={
                             "notes": notes if is_user else None,
                             "rating": rating if is_user else None,
