@@ -48,7 +48,9 @@ class Query(object):
         if scope == "friends":
             if not user.is_authenticated:
                 return qs.none()
-            qs = qs.filter(players__in=Follower.objects.filter(from_user=user.id))
+            qs = qs.filter(
+                players__in=Follower.objects.filter(from_user=user.id)
+            ).distinct()
         # there's not yet privacy scope
         elif scope == "public":
             pass
