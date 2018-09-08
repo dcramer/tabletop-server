@@ -39,6 +39,7 @@ class Query(object):
         id=graphene.UUID(),
         query=graphene.String(),
         scope=graphene.Argument(UserScope),
+        include_self=graphene.Boolean(),
     )
 
     def resolve_me(self, info, **kwargs):
@@ -47,7 +48,13 @@ class Query(object):
         return None
 
     def resolve_users(
-        self, info, id: str = None, query: str = None, scope: str = None, **kwargs
+        self,
+        info,
+        id: str = None,
+        query: str = None,
+        scope: str = None,
+        include_self: bool = False,
+        **kwargs
     ):
         user = info.context.user
         qs = User.objects.all()
@@ -57,6 +64,9 @@ class Query(object):
 
         if query:
             qs = qs.filter(name__istartswith=query)
+
+        if not include_self:
+            qs = qs.exclude(id=user.id)
 
         if scope == "followers":
             if not user.is_authenticated:
