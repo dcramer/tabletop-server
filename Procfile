@@ -1,2 +1,2 @@
-web: gunicorn server.wsgi --log-file -
+web: gunicorn tabletop.wsgi --log-file -
 release: python manage.py migrate

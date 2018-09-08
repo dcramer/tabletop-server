@@ -4,9 +4,8 @@ import graphene.test
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from server.accounts.models import User
-from server.games.models import Game, Publisher
-from server.schema import schema
+from tabletop.models import Game, Publisher, User
+from tabletop.root_schema import schema
 
 
 class Context(object):
