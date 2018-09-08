@@ -17,7 +17,7 @@ def test_add_checkin_minimum_requirements(gql_client, default_user, default_game
         addCheckin(game:"%s") {
             ok
             errors
-            checkIn {id}
+            checkin {id}
         }
     }"""
         % (default_game.id,),
@@ -28,7 +28,7 @@ def test_add_checkin_minimum_requirements(gql_client, default_user, default_game
     assert resp["errors"] is None
     assert resp["ok"] is True
 
-    checkin = Checkin.objects.get(id=resp["checkIn"]["id"])
+    checkin = Checkin.objects.get(id=resp["checkin"]["id"])
     assert checkin.game_id == default_game.id
     assert checkin.created_by_id == default_user.id
 
@@ -50,7 +50,7 @@ def test_add_checkin_notes(gql_client, default_user, default_game):
         addCheckin(game:"%s", notes:"I liked it") {
             ok
             errors
-            checkIn {id}
+            checkin {id}
         }
     }"""
         % (default_game.id,),
@@ -61,7 +61,7 @@ def test_add_checkin_notes(gql_client, default_user, default_game):
     assert resp["errors"] is None
     assert resp["ok"] is True
 
-    checkin = Checkin.objects.get(id=resp["checkIn"]["id"])
+    checkin = Checkin.objects.get(id=resp["checkin"]["id"])
     assert checkin.game_id == default_game.id
     assert checkin.created_by_id == default_user.id
 
@@ -83,7 +83,7 @@ def test_add_checkin_rating(gql_client, default_user, default_game):
         addCheckin(game:"%s", rating:4.5) {
             ok
             errors
-            checkIn {id}
+            checkin {id}
         }
     }"""
         % (default_game.id,),
@@ -94,7 +94,7 @@ def test_add_checkin_rating(gql_client, default_user, default_game):
     assert resp["errors"] is None
     assert resp["ok"] is True
 
-    checkin = Checkin.objects.get(id=resp["checkIn"]["id"])
+    checkin = Checkin.objects.get(id=resp["checkin"]["id"])
     assert checkin.game_id == default_game.id
     assert checkin.created_by_id == default_user.id
 
@@ -116,7 +116,7 @@ def test_add_checkin_only_winners(gql_client, default_user, default_game):
         addCheckin(game:"%s", winners:["%s"]) {
             ok
             errors
-            checkIn {id}
+            checkin {id}
         }
     }"""
         % (default_game.id, default_user.id),
@@ -127,7 +127,7 @@ def test_add_checkin_only_winners(gql_client, default_user, default_game):
     assert resp["errors"] is None
     assert resp["ok"] is True
 
-    checkin = Checkin.objects.get(id=resp["checkIn"]["id"])
+    checkin = Checkin.objects.get(id=resp["checkin"]["id"])
     assert checkin.game_id == default_game.id
     assert checkin.created_by_id == default_user.id
 
@@ -154,7 +154,7 @@ def test_add_checkin_multiple_players(
         addCheckin(game:"%s", players:["%s", "%s"], winners:["%s"], notes:"It was good", rating:5.0) {
             ok
             errors
-            checkIn {id}
+            checkin {id}
         }
     }"""
         % (default_game.id, default_user.id, other_user.id, default_user.id),
@@ -165,7 +165,7 @@ def test_add_checkin_multiple_players(
     assert resp["errors"] is None
     assert resp["ok"] is True
 
-    checkin = Checkin.objects.get(id=resp["checkIn"]["id"])
+    checkin = Checkin.objects.get(id=resp["checkin"]["id"])
     assert checkin.game_id == default_game.id
     assert checkin.created_by_id == default_user.id
 

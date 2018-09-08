@@ -10,7 +10,7 @@ from tabletop.schema import CheckinNode, DecimalField
 
 class AddPlayer(graphene.Mutation):
     class Arguments:
-        checkIn = graphene.UUID(required=True)
+        checkin = graphene.UUID(required=True)
         user = graphene.UUID(required=True)
         notes = graphene.String(required=False)
         rating = DecimalField(required=False)
@@ -18,12 +18,12 @@ class AddPlayer(graphene.Mutation):
 
     ok = graphene.Boolean()
     errors = graphene.List(graphene.String)
-    checkIn = graphene.Field(CheckinNode)
+    checkin = graphene.Field(CheckinNode)
 
     def mutate(
         self,
         info,
-        checkIn: str,
+        checkin: str,
         user: str,
         notes: str = None,
         rating: Decimal = None,
@@ -34,7 +34,7 @@ class AddPlayer(graphene.Mutation):
             return Checkin(ok=False, errors=["Authentication required"])
 
         try:
-            checkin = Checkin.objects.get(id=checkIn)
+            checkin = Checkin.objects.get(id=checkin)
         except Checkin.DoesNotExist:
             return Checkin(ok=False, errors=["Invalid Checkin"])
 
@@ -88,4 +88,4 @@ class AddPlayer(graphene.Mutation):
         except IntegrityError:
             return AddPlayer(ok=False, errors=["Player already exists"])
 
-        return AddPlayer(ok=True, checkIn=checkin)
+        return AddPlayer(ok=True, checkin=checkin)

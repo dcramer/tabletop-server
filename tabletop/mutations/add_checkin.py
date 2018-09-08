@@ -19,7 +19,7 @@ class AddCheckin(graphene.Mutation):
 
     ok = graphene.Boolean()
     errors = graphene.List(graphene.String)
-    checkIn = graphene.Field(CheckinNode)
+    checkin = graphene.Field(CheckinNode)
 
     def mutate(
         self,
@@ -69,4 +69,4 @@ class AddCheckin(graphene.Mutation):
                 if is_user and tags:
                     for tag in tags:
                         player.tags.add(Tag.objects.get(name=tag))
-        return AddCheckin(ok=True, checkIn=result)
+        return AddCheckin(ok=True, checkin=result)
