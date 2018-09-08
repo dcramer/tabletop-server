@@ -32,6 +32,7 @@ class Query(object):
         query=graphene.String(),
         players=graphene.Int(),
         max_duration=graphene.Int(),
+        parent=graphene.UUID(),
     )
     publishers = graphene.List(
         PublisherNode, id=graphene.UUID(), query=graphene.String()
@@ -43,12 +44,15 @@ class Query(object):
         info,
         id: str = None,
         query: str = None,
+        parent: str = None,
         players: int = None,
         max_duration: int = None,
     ):
         qs = Game.objects.all()
         if id:
             qs = qs.filter(id=id)
+        if parent:
+            qs = qs.filter(parent=parent)
         if query:
             qs = qs.filter(
                 Q(name__istartswith=query) | Q(publisher__name__istartswith=query)

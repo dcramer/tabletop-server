@@ -47,6 +47,33 @@ def test_add_game(gql_client, default_user, default_publisher):
     assert not game.confirmed
 
 
+def test_add_game_with_parent(
+    gql_client, default_user, default_game, default_publisher
+):
+    executed = gql_client.execute(
+        """
+    mutation {
+        addGame(name:"Fight Club XI", publisher:"%s", parent:"%s") {
+            ok
+            errors
+            game {id}
+        }
+    }"""
+        % (default_publisher.id, default_game.id),
+        user=default_user,
+    )
+    resp = executed["data"]["addGame"]
+    assert resp["errors"] is None
+    assert resp["ok"] is True
+
+    game = Game.objects.get(id=resp["game"]["id"])
+    assert game.name == "Fight Club XI"
+    assert game.parent_id == default_game.id
+    assert game.publisher_id == default_publisher.id
+    assert game.created_by_id == default_user.id
+    assert not game.confirmed
+
+
 def test_add_tag(gql_client, default_user):
     executed = gql_client.execute(
         """

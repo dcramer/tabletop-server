@@ -8,6 +8,7 @@ from .schema import GameNode, PublisherNode, TagNode
 class AddGame(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
+        parent = graphene.UUID(required=False)
         publisher = graphene.UUID(required=True)
         min_players = graphene.Int(required=False)
         max_players = graphene.Int(required=False)
@@ -22,6 +23,7 @@ class AddGame(graphene.Mutation):
         self,
         info,
         name: str = None,
+        parent: str = None,
         publisher: str = None,
         min_players: int = None,
         max_players: int = None,
@@ -34,11 +36,24 @@ class AddGame(graphene.Mutation):
         if duration and not duration_type:
             return AddGame(ok=False, errors=["Missing duration_type"])
 
+        if parent:
+            try:
+                parent = Game.objects.get(id=parent)
+            except Game.DoesNotExist:
+                return AddGame(ok=False, errors=["Parent game not found"])
+
+        if publisher:
+            try:
+                publisher = Publisher.objects.get(id=publisher)
+            except Publisher.DoesNotExist:
+                return AddGame(ok=False, errors=["Publisher not found"])
+
         try:
             with transaction.atomic():
                 result = Game.objects.create(
                     name=name,
-                    publisher=Publisher.objects.get(id=publisher),
+                    publisher=publisher,
+                    parent=parent,
                     min_players=min_players,
                     max_players=max_players,
                     duration=duration,

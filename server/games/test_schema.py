@@ -1,3 +1,6 @@
+from server.games.models import Game
+
+
 def test_empty_results(gql_client):
     executed = gql_client.execute("""{ games { id } }""")
     assert executed == {"data": {"games": []}}
@@ -34,5 +37,25 @@ def test_id_with_result(gql_client, default_game):
 def test_id_with_no_result(gql_client, default_game):
     executed = gql_client.execute(
         """{ games(id:"74451c13-2a97-42a2-b136-03af6cbb4153") { id, name } }"""
+    )
+    assert executed == {"data": {"games": []}}
+
+
+def test_parent_with_result(gql_client, default_game, default_publisher):
+    other_game = Game.objects.create(
+        publisher=default_publisher, parent=default_game, name="An Expansion"
+    )
+
+    executed = gql_client.execute(
+        """{ games(parent:"%s") { id, name } }""" % (str(default_game.id),)
+    )
+    assert executed == {
+        "data": {"games": [{"id": str(other_game.id), "name": other_game.name}]}
+    }
+
+
+def test_parent_with_no_result(gql_client, default_game):
+    executed = gql_client.execute(
+        """{ games(parent:"74451c13-2a97-42a2-b136-03af6cbb4153") { id, name } }"""
     )
     assert executed == {"data": {"games": []}}

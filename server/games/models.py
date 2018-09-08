@@ -38,6 +38,7 @@ class Publisher(models.Model):
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    parent = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=128, unique=True)
     confirmed = models.BooleanField(default=False)
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
