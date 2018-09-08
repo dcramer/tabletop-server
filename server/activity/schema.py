@@ -1,4 +1,5 @@
 import graphene
+from django.db.models import Q
 from graphene_django.types import DjangoObjectType
 
 from server.accounts.models import Follower
@@ -49,7 +50,12 @@ class Query(object):
             if not user.is_authenticated:
                 return qs.none()
             qs = qs.filter(
-                players__in=Follower.objects.filter(from_user=user.id)
+                Q(
+                    players__in=Follower.objects.filter(from_user=user.id).values(
+                        "to_user"
+                    )
+                )
+                | Q(players=user)
             ).distinct()
         # there's not yet privacy scope
         elif scope == "public":
