@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import logging
 import os
 
+import django_heroku
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -29,7 +30,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "z4gim%5i(n!_7nux8olbm95p##bw_f#p3bt%d!ooowfj4dsi95"
+SECRET_KEY = "a weak ass secret key"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -85,7 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "server.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -96,7 +96,6 @@ DATABASES = {
         "USER": "postgres",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -134,6 +133,7 @@ STATIC_URL = "/static/"
 
 GRAPHENE = {"SCHEMA": "server.schema.schema"}
 
-
 NPLUSONE_LOGGER = logging.getLogger("nplusone")
 NPLUSONE_LOG_LEVEL = logging.WARN
+
+django_heroku.settings(locals())

@@ -21,6 +21,9 @@ facebook-sdk = "*"
 sentry-sdk = "*"
 graphene-django = "*"
 nplusone = "*"
+honcho = "*"
+gunicorn = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.7"
