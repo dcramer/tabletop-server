@@ -22,7 +22,7 @@ def sample_bgg_game_details():
         return etree.fromstring(fp.read())
 
 
-def test_parse_game_details(sample_bgg_game_details):
+def test_parse_game_details(db, sample_bgg_game_details):
     result = parse_game_details(sample_bgg_game_details)
     assert result["bgg_id"] == 167791
     assert result["name"] == "Terraforming Mars"
