@@ -10,6 +10,23 @@ class DurationType(Enum):
     per_player = "per_player"
 
 
+class EntityType(Enum):
+    publisher = "publisher"
+    designer = "designer"
+    artist = "artist"
+
+
+class GameEntity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    entity = models.ForeignKey("tabletop.Entity", on_delete=models.CASCADE)
+    game = models.ForeignKey("tabletop.Game", on_delete=models.CASCADE)
+    type = EnumField(EntityType, max_length=32)
+
+    class Meta:
+        app_label = "tabletop"
+        unique_together = (("game", "type"),)
+
+
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     parent = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
@@ -21,7 +38,7 @@ class Game(models.Model):
     duration = models.PositiveIntegerField(null=True)
     duration_type = EnumField(DurationType, max_length=32, null=True)
     year_published = models.PositiveSmallIntegerField(null=True)
-    entities = models.ManyToManyField("tabletop.Entity")
+    entities = models.ManyToManyField("tabletop.Entity", through=GameEntity)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL

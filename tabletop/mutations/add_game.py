@@ -1,15 +1,22 @@
+from typing import List
+
 import graphene
 from django.db import IntegrityError, transaction
 
-from tabletop.models import DurationType, Entity, Game
-from tabletop.schema import GameNode
+from tabletop.models import DurationType, Entity, Game, GameEntity
+from tabletop.schema import EntityTypeEnum, GameNode
+
+
+class EntityInput(graphene.InputObjectType):
+    name = graphene.String(required=True)
+    type = graphene.Argument(EntityTypeEnum, required=True)
 
 
 class AddGame(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
         parent = graphene.UUID(required=False)
-        entities = graphene.List(graphene.UUID, required=True)
+        entities = graphene.List(EntityInput, required=False)
         min_players = graphene.Int(required=False)
         max_players = graphene.Int(required=False)
         duration = graphene.Int(required=False)
@@ -24,7 +31,7 @@ class AddGame(graphene.Mutation):
         info,
         name: str = None,
         parent: str = None,
-        entities: str = None,
+        entities: List[EntityInput] = None,
         min_players: int = None,
         max_players: int = None,
         duration: int = None,
@@ -42,13 +49,6 @@ class AddGame(graphene.Mutation):
             except Game.DoesNotExist:
                 return AddGame(ok=False, errors=["Parent game not found"])
 
-        if entities:
-
-            try:
-                entities = [Entity.objects.get(id=e) for e in entities]
-            except Entity.DoesNotExist:
-                return AddGame(ok=False, errors=["Entity not found"])
-
         try:
             with transaction.atomic():
                 result = Game.objects.create(
@@ -62,7 +62,11 @@ class AddGame(graphene.Mutation):
                 )
                 if entities:
                     for entity in entities:
-                        result.entities.add(entity)
+                        GameEntity.objects.create(
+                            entity=Entity.objects.get_or_create(name=entity.name)[0],
+                            game=result,
+                            type=entity.type,
+                        )
 
         except IntegrityError as exc:
             if "duplicate key" in str(exc):

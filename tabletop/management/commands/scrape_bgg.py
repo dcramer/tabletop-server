@@ -2,32 +2,11 @@ import json
 import os
 from time import sleep
 
-import requests
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
-CACHE_ROOT = os.path.join(settings.CACHE_PATH, "bgg")
-GAME_DETAILS_PATH = os.path.join(CACHE_ROOT, "game-details")
+from tabletop.utils.bgg import CACHE_ROOT, cache_game_details
+
 META_PATH = os.path.join(CACHE_ROOT, "meta.json")
-
-FILE_HEADER = b'<boardgames termsofuse="https://boardgamegeek.com/xmlapi/termsofuse">'
-
-
-def cache_game_details(game_id):
-    if not os.path.exists(GAME_DETAILS_PATH):
-        os.makedirs(GAME_DETAILS_PATH)
-
-    req = requests.get(
-        "https://www.boardgamegeek.com/xmlapi/boardgame/{}".format(game_id)
-    )
-    content = req.content
-
-    assert content.startswith(FILE_HEADER)
-
-    cache_path = os.path.join(GAME_DETAILS_PATH, "{}.xml".format(game_id))
-    with open(cache_path, "wb") as fp:
-        fp.write(content)
-    return content
 
 
 class Command(BaseCommand):

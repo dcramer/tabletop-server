@@ -13,6 +13,7 @@ def test_add_tag(gql_client, default_user):
     }""",
         user=default_user,
     )
+    assert not executed.get("errors")
     resp = executed["data"]["addTag"]
     assert resp["errors"] is None
     assert resp["ok"] is True
