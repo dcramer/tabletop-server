@@ -26,6 +26,8 @@ gunicorn = "*"
 django-heroku = "*"
 factory-boy = "*"
 "flake8" = "*"
+lxml = "*"
+tabletop-server = {editable = true, path = "."}
 
 [requires]
 python_version = "3.7"

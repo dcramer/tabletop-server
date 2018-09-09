@@ -134,4 +134,8 @@ GRAPHENE = {"SCHEMA": "tabletop.root_schema.schema"}
 NPLUSONE_LOGGER = logging.getLogger("nplusone")
 NPLUSONE_LOG_LEVEL = logging.WARN
 
+CACHE_PATH = os.path.join(
+    os.path.normpath(os.path.dirname(__file__)), os.pardir, "cache"
+)
+
 django_heroku.settings(locals())
