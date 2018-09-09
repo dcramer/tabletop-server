@@ -105,3 +105,4 @@ venv.bak/
 
 # local cache
 /cache
+/media

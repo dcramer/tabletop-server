@@ -29,6 +29,10 @@ def coerce_posint(value):
     return value
 
 
+def coerce_first_text(node):
+    return node[0].text if node else None
+
+
 def cache_game_details(game_id):
     if not os.path.exists(GAME_DETAILS_PATH):
         os.makedirs(GAME_DETAILS_PATH)
@@ -79,11 +83,12 @@ def parse_game_details(tree):
         "bgg_id": int(game.get("objectid")),
         "name": game.xpath("name[@primary='true']")[0].text,
         "year_published": year_published,
-        "min_players": coerce_posint(game.xpath("minplayers")[0].text),
-        "max_players": coerce_posint(game.xpath("maxplayers")[0].text),
+        "min_players": coerce_posint(coerce_first_text(game.xpath("minplayers"))),
+        "max_players": coerce_posint(coerce_first_text(game.xpath("maxplayers"))),
         "entities": entities,
         "parent": parent,
         # bgg doesn't understand "per player" duration estimates
-        "duration": coerce_posint(game.xpath("playingtime")[0].text),
+        "duration": coerce_posint(coerce_first_text(game.xpath("playingtime"))),
         "duration_type": DurationType.total,
+        "image_url": coerce_first_text(game.xpath("image")),
     }

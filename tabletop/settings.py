@@ -41,6 +41,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "tabletop",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -48,7 +49,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "graphene_django",
-    "tabletop",
     "nplusone.ext.django",
 ]
 
@@ -128,6 +128,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = "/static/"
+
+MEDIA_ROOT = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)), os.pardir, "media/"
+)
+MEDIA_URL = "/media/"
 
 GRAPHENE = {"SCHEMA": "tabletop.root_schema.schema"}
 
