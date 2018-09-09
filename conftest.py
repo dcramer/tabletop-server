@@ -4,7 +4,7 @@ import graphene.test
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from tabletop.models import Entity, Game, User
+from tabletop.models import Checkin, Entity, Game, Player, User
 from tabletop.root_schema import schema
 
 
@@ -75,3 +75,14 @@ def default_game(db, default_publisher, default_user):
         created_by=default_user,
         confirmed=True,
     )
+
+
+@pytest.fixture
+def default_checkin(db, default_game, default_user):
+    checkin = Checkin.objects.create(
+        id=UUID("4b2a619c-40a8-4f58-96a5-c2f74795bfa7"),
+        game=default_game,
+        created_by=default_user,
+    )
+    Player.objects.create(checkin=checkin, user=default_user)
+    return checkin

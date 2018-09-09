@@ -1,7 +1,9 @@
 import graphene
 
 from .add_checkin import AddCheckin
+from .add_comment import AddComment
 from .add_entity import AddEntity
+from .add_like import AddLike
 from .add_game import AddGame
 from .add_player import AddPlayer
 from .add_tag import AddTag
@@ -13,6 +15,8 @@ from .update_checkin import UpdateCheckin
 
 class RootMutation(graphene.ObjectType):
     addCheckin = AddCheckin.Field()
+    addComment = AddComment.Field()
+    addLike = AddLike.Field()
     addEntity = AddEntity.Field()
     addGame = AddGame.Field()
     addPlayer = AddPlayer.Field()

@@ -27,6 +27,7 @@ class Query(object):
         entity: str = None,
         max_duration: int = None,
     ):
+        # TODO(dcramer): fix optimize_queryset so it handles the OneToOne join automatically
         qs = Game.objects.select_related("image").distinct()
         if id:
             qs = qs.filter(id=id)
