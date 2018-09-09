@@ -33,9 +33,7 @@ class Query(object):
         if parent:
             qs = qs.filter(parent=parent)
         if query:
-            qs = qs.filter(
-                Q(name__istartswith=query) | Q(entities__name__istartswith=query)
-            )
+            qs = qs.filter(name__istartswith=query)
         if entity:
             qs = qs.filter(entities=entity)
         if players:
