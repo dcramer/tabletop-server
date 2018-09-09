@@ -3,7 +3,7 @@ import os
 import requests
 from django.conf import settings
 
-from tabletop.models import DurationType, EntityType
+from tabletop.models import DurationType, EntityType, Game
 
 CACHE_ROOT = os.path.join(settings.CACHE_PATH, "bgg")
 
@@ -69,6 +69,12 @@ def parse_game_details(tree):
         ):  # we ignore things like "3000 bc" because lol
             year_published = None
 
+    expansion_to = game.xpath("boardgameexpansion")
+    if expansion_to:
+        parent = Game.objects.filter(name=expansion_to[0].text).first()
+    else:
+        parent = None
+
     return {
         "bgg_id": int(game.get("objectid")),
         "name": game.xpath("name[@primary='true']")[0].text,
@@ -76,6 +82,7 @@ def parse_game_details(tree):
         "min_players": coerce_posint(game.xpath("minplayers")[0].text),
         "max_players": coerce_posint(game.xpath("maxplayers")[0].text),
         "entities": entities,
+        "parent": parent,
         # bgg doesn't understand "per player" duration estimates
         "duration": coerce_posint(game.xpath("playingtime")[0].text),
         "duration_type": DurationType.total,

@@ -55,6 +55,7 @@ class Command(BaseCommand):
                             duration=details["duration"],
                             duration_type=details["duration_type"],
                             year_published=details["year_published"],
+                            parent=details["parent"],
                         )
                         for entity in details["entities"]:
                             GameEntity.objects.create(
@@ -71,3 +72,6 @@ class Command(BaseCommand):
                     if not game.bgg_id:
                         game.bgg_id = details["bgg_id"]
                         game.save(update_fields=["bgg_id"])
+                    if details["parent"] and not game.parent:
+                        game.parent = details["parent"]
+                        game.save(update_fields=["parent"])
