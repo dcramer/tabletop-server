@@ -27,7 +27,7 @@ class Query(object):
         entity: str = None,
         max_duration: int = None,
     ):
-        qs = Game.objects.distinct()
+        qs = Game.objects.select_related("image").distinct()
         if id:
             qs = qs.filter(id=id)
         if parent:

@@ -29,6 +29,7 @@ factory-boy = "*"
 lxml = "*"
 tabletop-server = {editable = true, path = "."}
 django-enumfields = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.7"

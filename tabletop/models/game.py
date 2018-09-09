@@ -40,7 +40,6 @@ class Game(models.Model):
     year_published = models.PositiveSmallIntegerField(null=True)
     entities = models.ManyToManyField("tabletop.Entity", through=GameEntity)
     bgg_id = models.PositiveIntegerField(null=True, db_index=True)
-    image = models.FileField(upload_to="images/game-boxes/%Y/%m/%d/", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL

@@ -8,14 +8,18 @@ from django.db import transaction
 from django.db.models import Q
 from lxml import etree
 
-from tabletop.models import Entity, Game, GameEntity
+from tabletop.models import Entity, Game, GameEntity, GameImage
 from tabletop.utils.bgg import GAME_DETAILS_PATH, parse_game_details
 
 
 def save_game(details):
-    game = Game.objects.filter(
-        Q(bgg_id=details["bgg_id"]) | Q(name__iexact=details["name"])
-    ).first()
+    game = (
+        Game.objects.filter(
+            Q(bgg_id=details["bgg_id"]) | Q(name__iexact=details["name"])
+        )
+        .select_related("image")
+        .first()
+    )
     if not game:
         created = True
         with transaction.atomic():
@@ -44,17 +48,21 @@ def save_game(details):
             game.parent = details["parent"]
             game.save(update_fields=["parent"])
 
-    if details["image_url"] and not game.image:
-        req = requests.get(details["image_url"])
-        tmp = tempfile.NamedTemporaryFile()
-        for chunk in req.iter_content(1024 * 8):
-            if not chunk:
-                break
-            tmp.write(chunk)
-        game.image.save(
-            "{}.{}".format(str(game.id), details["image_url"].rsplit(".", 1)[-1]),
-            files.File(tmp),
-        )
+    if details["image_url"]:
+        try:
+            game.image
+        except Game.image.RelatedObjectDoesNotExist:
+            req = requests.get(details["image_url"])
+            tmp = tempfile.NamedTemporaryFile()
+            for chunk in req.iter_content(1024 * 8):
+                if not chunk:
+                    break
+                tmp.write(chunk)
+            image = GameImage(game=game)
+            image.file.save(
+                "{}.{}".format(str(game.id), details["image_url"].rsplit(".", 1)[-1]),
+                files.File(tmp),
+            )
 
     return game, created
 

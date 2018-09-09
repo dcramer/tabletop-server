@@ -1,19 +1,31 @@
+import graphene
 from graphene_django.types import DjangoObjectType
 
-from tabletop.models import Game
+from tabletop.models import Game, GameImage
 
 
-class GameNode(DjangoObjectType):
+class GameImageNode(DjangoObjectType):
+    url = graphene.String()
+
     class Meta:
-        name = "Game"
-        model = Game
+        name = "GameImage"
+        model = GameImage
+        only_fields = ("width", "height")
 
-    def resolve_image(self, args):
-        if not self.image:
+    def resolve_url(self, args):
+        if not self.file:
             return None
-        url = self.image.url
+        url = self.file.url
         if not url.startswith(("http:", "https:")):
             if not url.startswith("/"):
                 url = "/" + url
-            return args.context.build_absolute_uri(url)
-        return self.image.url
+            url = args.context.build_absolute_uri(url)
+        return url
+
+
+class GameNode(DjangoObjectType):
+    image = GameImageNode()
+
+    class Meta:
+        name = "Game"
+        model = Game
