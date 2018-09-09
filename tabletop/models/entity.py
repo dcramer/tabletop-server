@@ -2,10 +2,18 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.db import models
+from enumfields import Enum, EnumField
 
 
-class Publisher(models.Model):
+class EntityType(Enum):
+    publisher = "publisher"
+    designer = "designer"
+    artist = "artist"
+
+
+class Entity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    type = EnumField(EntityType, max_length=32)
     name = models.CharField(max_length=128, unique=True)
     confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -14,7 +22,4 @@ class Publisher(models.Model):
     )
 
     class Meta:
-        app_label = "tabletop"
-
-    def __str__(self):
-        return self.name
+        unique_together = ("type", "name")

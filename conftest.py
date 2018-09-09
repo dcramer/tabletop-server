@@ -4,7 +4,7 @@ import graphene.test
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from tabletop.models import Game, Publisher, User
+from tabletop.models import Entity, EntityType, Game, User
 from tabletop.root_schema import schema
 
 
@@ -39,9 +39,32 @@ def default_user(db):
 
 @pytest.fixture
 def default_publisher(db, default_user):
-    return Publisher.objects.create(
+    return Entity.objects.create(
         id=UUID("74451c13-2a97-42a2-b136-03af6cbb4153"),
         name="Guinea Pig Games",
+        type=EntityType.publisher,
+        created_by=default_user,
+        confirmed=True,
+    )
+
+
+@pytest.fixture
+def default_artist(db, default_user):
+    return Entity.objects.create(
+        id=UUID("449c76aa-2a97-42a2-b136-03af6cbb4153"),
+        name="John Cusoe",
+        type=EntityType.artist,
+        created_by=default_user,
+        confirmed=True,
+    )
+
+
+@pytest.fixture
+def default_designer(db, default_user):
+    return Entity.objects.create(
+        id=UUID("449c76aa-2a97-42a2-b136-91d965e3f462"),
+        name="John Cusoe",
+        type=EntityType.designer,
         created_by=default_user,
         confirmed=True,
     )
@@ -51,7 +74,6 @@ def default_publisher(db, default_user):
 def default_game(db, default_publisher, default_user):
     return Game.objects.create(
         id=UUID("76111b88-301b-4620-9c93-7c6d28f0987b"),
-        publisher=default_publisher,
         name="Unsettlers of Qatan",
         created_by=default_user,
         confirmed=True,

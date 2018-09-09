@@ -12,7 +12,7 @@ class Query(object):
         id=graphene.UUID(),
         query=graphene.String(),
         players=graphene.Int(),
-        publisher=graphene.UUID(),
+        entity=graphene.UUID(),
         max_duration=graphene.Int(),
         parent=graphene.UUID(),
     )
@@ -24,20 +24,20 @@ class Query(object):
         query: str = None,
         parent: str = None,
         players: int = None,
-        publisher: str = None,
+        entity: str = None,
         max_duration: int = None,
     ):
-        qs = Game.objects.all()
+        qs = Game.objects.distinct()
         if id:
             qs = qs.filter(id=id)
         if parent:
             qs = qs.filter(parent=parent)
         if query:
             qs = qs.filter(
-                Q(name__istartswith=query) | Q(publisher__name__istartswith=query)
+                Q(name__istartswith=query) | Q(entities__name__istartswith=query)
             )
-        if publisher:
-            qs = qs.filter(publisher=publisher)
+        if entity:
+            qs = qs.filter(entities=entity)
         if players:
             qs = qs.filter(min_players__lte=players, max_players__gte=players)
         if max_duration:

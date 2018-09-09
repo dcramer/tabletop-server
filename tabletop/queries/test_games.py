@@ -41,10 +41,8 @@ def test_id_with_no_result(gql_client, default_game):
     assert executed == {"data": {"games": []}}
 
 
-def test_parent_with_result(gql_client, default_game, default_publisher):
-    other_game = Game.objects.create(
-        publisher=default_publisher, parent=default_game, name="An Expansion"
-    )
+def test_parent_with_result(gql_client, default_game):
+    other_game = Game.objects.create(parent=default_game, name="An Expansion")
 
     executed = gql_client.execute(
         """{ games(parent:"%s") { id, name } }""" % (str(default_game.id),)

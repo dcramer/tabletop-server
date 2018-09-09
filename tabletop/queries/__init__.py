@@ -1,11 +1,12 @@
 import graphene
-from . import checkins, games, me, publishers, tags, users
+
+from . import checkins, entities, games, me, tags, users
 
 
 class RootQuery(
     checkins.Query,
+    entities.Query,
     games.Query,
-    publishers.Query,
     tags.Query,
     me.Query,
     users.Query,

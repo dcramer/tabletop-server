@@ -1,8 +1,8 @@
-from enum import Enum
 from uuid import uuid4
 
 from django.conf import settings
 from django.db import models
+from enumfields import Enum, EnumField
 
 
 class DurationType(Enum):
@@ -15,14 +15,13 @@ class Game(models.Model):
     parent = models.ForeignKey("self", null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=128, unique=True)
     confirmed = models.BooleanField(default=False)
-    publisher = models.ForeignKey("tabletop.Publisher", on_delete=models.CASCADE)
     min_players = models.PositiveIntegerField(null=True)
     max_players = models.PositiveIntegerField(null=True)
     # suggested duration in minutes
     duration = models.PositiveIntegerField(null=True)
-    duration_type = models.CharField(
-        choices=[(v, v.value) for v in DurationType], max_length=32, null=True
-    )
+    duration_type = EnumField(DurationType, max_length=32, null=True)
+    year_published = models.PositiveSmallIntegerField(null=True)
+    entities = models.ManyToManyField("tabletop.Entity")
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL
