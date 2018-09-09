@@ -4,7 +4,7 @@ from time import sleep
 
 from django.core.management.base import BaseCommand
 
-from tabletop.utils.bgg import CACHE_ROOT, cache_game_details
+from tabletop.utils.bgg import CACHE_ROOT, UnknownGame, cache_game_details
 
 META_PATH = os.path.join(CACHE_ROOT, "meta.json")
 
@@ -44,7 +44,13 @@ class Command(BaseCommand):
                 self.style.SQL_FIELD("Retrieving game_id={}".format(last_game_id))
             )
 
-            cache_game_details(last_game_id)
+            try:
+                cache_game_details(last_game_id)
+            except UnknownGame:
+                self.stdout.write(
+                    self.style.ERROR("Unknown game_id: {}".format(last_game_id))
+                )
+
             meta["last_game_id"] = last_game_id
             self.save_meta(meta)
             sleep(1)

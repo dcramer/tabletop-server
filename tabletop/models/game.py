@@ -24,7 +24,7 @@ class GameEntity(models.Model):
 
     class Meta:
         app_label = "tabletop"
-        unique_together = (("game", "type"),)
+        unique_together = (("game", "entity", "type"),)
 
 
 class Game(models.Model):
@@ -39,6 +39,7 @@ class Game(models.Model):
     duration_type = EnumField(DurationType, max_length=32, null=True)
     year_published = models.PositiveSmallIntegerField(null=True)
     entities = models.ManyToManyField("tabletop.Entity", through=GameEntity)
+    bgg_id = models.PositiveIntegerField(null=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL
@@ -49,3 +50,8 @@ class Game(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_bgg_link(self):
+        if not self.bgg_id:
+            return
+        return "https://boardgamegeek.com/boardgame/{}".format(self.bgg_id)

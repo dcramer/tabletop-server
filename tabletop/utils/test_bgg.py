@@ -24,14 +24,8 @@ def sample_bgg_game_details():
 
 def test_parse_game_details(sample_bgg_game_details):
     result = parse_game_details(sample_bgg_game_details)
-    assert result["name"] == "Hexpack"
-    assert result["year_published"] == 2008
-    assert len(result["entities"]) == 6
-    assert {"name": "Blue Panther", "type": EntityType.publisher} in result["entities"]
-    assert {"name": "(Public Domain)", "type": EntityType.publisher} in result[
-        "entities"
-    ]
-    assert {"name": "Nathan Morse", "type": EntityType.designer} in result["entities"]
-    assert {"name": "Nathan Morse", "type": EntityType.artist} in result["entities"]
-    assert {"name": "Daniel Wilcox", "type": EntityType.designer} in result["entities"]
-    assert {"name": "Daniel Wilcox", "type": EntityType.artist} in result["entities"]
+    assert result["bgg_id"] == 167791
+    assert result["name"] == "Terraforming Mars"
+    assert result["year_published"] == 2016
+    assert len(result["entities"]) == 18
+    assert {"name": "FryxGames", "type": EntityType.publisher} in result["entities"]
