@@ -19,11 +19,17 @@ class Query(object):
         CheckinNode,
         id=graphene.UUID(),
         scope=graphene.Argument(CheckinScope),
+        game=graphene.UUID(),
         created_by=graphene.UUID(),
     )
 
     def resolve_checkins(
-        self, info, id: str = None, scope: str = None, created_by: str = None
+        self,
+        info,
+        id: str = None,
+        scope: str = None,
+        game: str = None,
+        created_by: str = None,
     ):
         user = info.context.user
 
@@ -31,6 +37,9 @@ class Query(object):
 
         if id:
             qs = qs.filter(id=id)
+
+        if game:
+            qs = qs.filter(game=game)
 
         if scope == "friends":
             if not user.is_authenticated:
