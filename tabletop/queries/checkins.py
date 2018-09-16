@@ -1,5 +1,5 @@
 import graphene
-from django.db.models import Q
+from django.db.models import Count, Q
 
 from tabletop.models import Checkin, Follower
 from tabletop.schema import CheckinNode
@@ -31,7 +31,7 @@ class Query(object):
         game: str = None,
         created_by: str = None,
     ):
-        user = info.context.user
+        current_user = info.context.user
 
         qs = Checkin.objects.all()
 
@@ -42,15 +42,15 @@ class Query(object):
             qs = qs.filter(game=game)
 
         if scope == "friends":
-            if not user.is_authenticated:
+            if not current_user.is_authenticated:
                 return qs.none()
             qs = qs.filter(
                 Q(
-                    players__in=Follower.objects.filter(from_user=user.id).values(
-                        "to_user"
-                    )
+                    players__in=Follower.objects.filter(
+                        from_user=current_user.id
+                    ).values("to_user")
                 )
-                | Q(players=user)
+                | Q(players=current_user)
             ).distinct()
         # there's not yet privacy scope
         elif scope == "public":
@@ -60,6 +60,15 @@ class Query(object):
 
         if created_by:
             qs = qs.filter(created_by=created_by)
+
+        qs = qs.annotate(total_likes=Count("likes"), total_comments=Count("comments"))
+        if current_user.is_authenticated:
+            qs = qs.extra(
+                select={
+                    "is_liked": "select exists(select 1 from tabletop_like where user_id = %s and checkin_id = tabletop_checkin.id)"
+                },
+                select_params=[current_user.id],
+            )
 
         qs = qs.order_by("-created_at")
 
