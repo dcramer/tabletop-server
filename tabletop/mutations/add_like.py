@@ -13,7 +13,7 @@ class AddLike(graphene.Mutation):
     errors = graphene.List(graphene.String)
     like = graphene.Field(LikeNode)
 
-    def mutate(self, info, checkin: str = None, text: str = None):
+    def mutate(self, info, checkin: str = None):
         current_user = info.context.user
         if not current_user.is_authenticated:
             return AddLike(ok=False, errors=["Authentication required"])
