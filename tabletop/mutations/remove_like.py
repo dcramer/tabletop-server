@@ -1,11 +1,10 @@
 import graphene
-from django.db import IntegrityError, transaction
 
 from tabletop.models import Checkin, Follower, Like, Player
 from tabletop.schema import CheckinNode
 
 
-class AddLike(graphene.Mutation):
+class RemoveLike(graphene.Mutation):
     class Arguments:
         checkin = graphene.UUID(required=True)
 
@@ -16,12 +15,12 @@ class AddLike(graphene.Mutation):
     def mutate(self, info, checkin: str = None):
         current_user = info.context.user
         if not current_user.is_authenticated:
-            return AddLike(ok=False, errors=["Authentication required"])
+            return RemoveLike(ok=False, errors=["Authentication required"])
 
         try:
             checkin = Checkin.objects.get(id=checkin)
         except Checkin.DoesNotExist:
-            return AddLike(ok=False, errors=["Checkin not found"])
+            return RemoveLike(ok=False, errors=["Checkin not found"])
 
         # you can only like if you are friends w/ one of the players
         # or a player in the agme
@@ -33,15 +32,8 @@ class AddLike(graphene.Mutation):
         elif Follower.objects.filter(to_user=current_user, from_user_id__in=player_ids):
             pass
         else:
-            return AddLike(ok=False, errors=["Cannot add like to Checkin"])
+            return RemoveLike(ok=False, errors=["Cannot remove like from Checkin"])
 
-        try:
-            with transaction.atomic():
-                Like.objects.create(checkin=checkin, created_by=info.context.user)
+        Like.objects.filter(checkin=checkin, created_by=info.context.user).delete()
 
-        except IntegrityError as exc:
-            if "duplicate key" in str(exc):
-                pass
-            raise
-
-        return AddLike(ok=True, checkin=checkin)
+        return RemoveLike(ok=True, checkin=checkin)

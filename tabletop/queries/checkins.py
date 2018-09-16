@@ -65,7 +65,7 @@ class Query(object):
         if current_user.is_authenticated:
             qs = qs.extra(
                 select={
-                    "is_liked": "select exists(select 1 from tabletop_like where user_id = %s and checkin_id = tabletop_checkin.id)"
+                    "is_liked": "select exists(select 1 from tabletop_like where created_by_id = %s and checkin_id = tabletop_checkin.id)"
                 },
                 select_params=[current_user.id],
             )

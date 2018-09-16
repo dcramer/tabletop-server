@@ -2,7 +2,7 @@ import graphene
 from django.db import IntegrityError, transaction
 
 from tabletop.models import Checkin, Comment, Follower, Player
-from tabletop.schema import CommentNode
+from tabletop.schema import CheckinNode, CommentNode
 
 
 class AddComment(graphene.Mutation):
@@ -13,6 +13,7 @@ class AddComment(graphene.Mutation):
     ok = graphene.Boolean()
     errors = graphene.List(graphene.String)
     comment = graphene.Field(CommentNode)
+    checkin = graphene.Field(CheckinNode)
 
     def mutate(self, info, checkin: str = None, text: str = None):
         current_user = info.context.user
@@ -47,4 +48,4 @@ class AddComment(graphene.Mutation):
                 return AddComment(ok=False, errors=["Comment already exists."])
             raise
 
-        return AddComment(ok=True, comment=result)
+        return AddComment(ok=True, comment=result, checkin=checkin)
