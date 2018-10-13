@@ -1,7 +1,7 @@
 import graphene
 from graphene_django.types import DjangoObjectType
 
-from tabletop.models import Checkin
+from tabletop.models import Checkin, Like
 
 
 class CheckinNode(DjangoObjectType):
@@ -14,4 +14,11 @@ class CheckinNode(DjangoObjectType):
         name = "Checkin"
 
     def resolve_is_liked(self, info):
-        return getattr(self, "is_liked", False)
+        current_user = info.context.user
+        if not current_user.is_authenticated:
+            return False
+        if not hasattr(self, "is_liked"):
+            return Like.objects.filter(
+                created_by=current_user, checkin=self.id
+            ).exists()
+        return self.is_liked

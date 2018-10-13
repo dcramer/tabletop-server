@@ -40,8 +40,7 @@ class AddLike(graphene.Mutation):
                 Like.objects.create(checkin=checkin, created_by=info.context.user)
 
         except IntegrityError as exc:
-            if "duplicate key" in str(exc):
-                pass
-            raise
+            if "duplicate key" not in str(exc):
+                raise
 
         return AddLike(ok=True, checkin=checkin)
