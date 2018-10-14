@@ -4,7 +4,7 @@ import tempfile
 import requests
 from django.core import files
 from django.core.management.base import BaseCommand
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Q
 from lxml import etree
 
@@ -59,10 +59,16 @@ def save_game(details):
                     break
                 tmp.write(chunk)
             image = GameImage(game=game)
-            image.file.save(
-                "{}.{}".format(str(game.id), details["image_url"].rsplit(".", 1)[-1]),
-                files.File(tmp),
-            )
+            try:
+                image.file.save(
+                    "{}.{}".format(
+                        str(game.id), details["image_url"].rsplit(".", 1)[-1]
+                    ),
+                    files.File(tmp),
+                )
+            except IntegrityError:
+                # invalid image type
+                pass
 
     return game, created
 
