@@ -3,8 +3,9 @@ from uuid import UUID
 import graphene.test
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from django.db import transaction
 
-from tabletop.models import Checkin, Entity, Game, Player, User
+from tabletop.models import Checkin, Collection, CollectionGame, Entity, Game, Player, User
 from tabletop.root_schema import schema
 
 
@@ -86,3 +87,15 @@ def default_checkin(db, default_game, default_user):
     )
     Player.objects.create(checkin=checkin, user=default_user)
     return checkin
+
+
+@pytest.fixture
+def default_collection(db, default_game, default_user):
+    with transaction.atomic():
+        collection = Collection.objects.create(
+            id=UUID("6960436f-53cd-4d00-bd5b-a293349e7d1f"),
+            name="My Games",
+            created_by=default_user,
+        )
+        CollectionGame.objects.create(game=default_game, collection=collection)
+    return collection

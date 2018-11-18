@@ -1,5 +1,6 @@
 from .checkin import *  # NOQA
 from .comment import *  # NOQA
+from .collection import *  # NOQA
 from .decimal import *  # NOQA
 from .entity import *  # NOQA
 from .entitytype import *  # NOQA

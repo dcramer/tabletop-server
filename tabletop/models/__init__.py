@@ -1,4 +1,5 @@
 from .checkin import *  # NOQA
+from .collection import *  # NOQA
 from .comment import *  # NOQA
 from .entity import *  # NOQA
 from .follower import *  # NOQA
