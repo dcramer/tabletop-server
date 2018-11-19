@@ -48,7 +48,7 @@ class Query(object):
         if created_by:
             qs = qs.filter(created_by=created_by)
 
-        qs = qs.order_by("-created_at")
+        qs = qs.order_by("is_default", "name")
 
         qs = optimize_queryset(qs, info, "collections", fix_collections_query)
 
