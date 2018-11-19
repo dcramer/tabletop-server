@@ -1,9 +1,22 @@
 import graphene
-from django.db.models import F, Q
+from django.db.models import F, Prefetch, Q
 
-from tabletop.models import DurationType, Game
+from tabletop.models import Collection, DurationType, Game
 from tabletop.schema import GameNode
 from tabletop.utils.graphene import optimize_queryset
+
+
+def fix_games_queryset(queryset, selected_fields, info):
+    if "collections" in selected_fields:
+        current_user = info.context.user
+        if current_user.is_authenticated:
+            queryset = queryset.prefetch_related(
+                Prefetch(
+                    "collections",
+                    queryset=Collection.objects.filter(created_by=current_user),
+                )
+            )
+    return queryset
 
 
 class Query(object):
@@ -48,5 +61,5 @@ class Query(object):
                     duration_type=DurationType.per_player,
                 )
             )
-        qs = optimize_queryset(qs, info, "games")
+        qs = optimize_queryset(qs, info, "games", fix_games_queryset)
         return qs.order_by("name")

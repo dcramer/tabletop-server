@@ -13,6 +13,29 @@ def test_single_result(gql_client, default_game):
     }
 
 
+def test_single_result_with_collections(
+    gql_client, default_collection, default_game, default_user
+):
+    executed = gql_client.execute("""{ games { id, collections { id } } }""")
+    assert executed == {
+        "data": {"games": [{"id": str(default_game.id), "collections": []}]}
+    }
+
+    executed = gql_client.execute(
+        """{ games { id, collections { id } } }""", user=default_user
+    )
+    assert executed == {
+        "data": {
+            "games": [
+                {
+                    "id": str(default_game.id),
+                    "collections": [{"id": str(default_collection.id)}],
+                }
+            ]
+        }
+    }
+
+
 def test_query_with_result(gql_client, default_game):
     executed = gql_client.execute("""{ games(query:"Unsettlers") { id, name } }""")
     assert executed == {

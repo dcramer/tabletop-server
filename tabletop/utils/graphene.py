@@ -102,5 +102,5 @@ def optimize_queryset(qs, info, root, callback=None):
     if prefetch:
         qs = qs.prefetch_related(*prefetch)
     if callback:
-        qs = callback(qs, selected_fields)
+        qs = callback(queryset=qs, selected_fields=selected_fields, info=info)
     return qs

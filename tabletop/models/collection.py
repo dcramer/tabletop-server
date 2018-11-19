@@ -18,7 +18,9 @@ class CollectionGame(models.Model):
 class Collection(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=200)
-    games = models.ManyToManyField("tabletop.Game", through=CollectionGame)
+    games = models.ManyToManyField(
+        "tabletop.Game", through=CollectionGame, related_name="collections"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL
