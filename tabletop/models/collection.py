@@ -17,6 +17,7 @@ class CollectionGame(models.Model):
 
 class Collection(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    is_default = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
     description = models.TextField(null=True)
     games = models.ManyToManyField(
@@ -30,6 +31,7 @@ class Collection(models.Model):
     class Meta:
         app_label = "tabletop"
         unique_together = (("name", "created_by"),)
+        # a unique conditional index exists on ('is_default', 'created_by') where is_default is True
 
     def __str__(self):
         return self.name

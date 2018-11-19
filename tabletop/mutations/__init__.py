@@ -11,6 +11,7 @@ from .add_player import AddPlayer
 from .add_tag import AddTag
 from .follow import Follow
 from .login import Login
+from .remove_collection import RemoveCollection
 from .remove_comment import RemoveComment
 from .remove_game_from_collection import RemoveGameFromCollection
 from .remove_like import RemoveLike
@@ -32,6 +33,7 @@ class RootMutation(graphene.ObjectType):
     addTag = AddTag.Field()
     follow = Follow.Field()
     login = Login.Field()
+    removeCollection = RemoveCollection.Field()
     removeComment = RemoveComment.Field()
     removeGameFromCollection = RemoveGameFromCollection.Field()
     removeLike = RemoveLike.Field()

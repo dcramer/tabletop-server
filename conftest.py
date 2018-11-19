@@ -97,6 +97,7 @@ def default_collection(db, default_game, default_user):
             id=UUID("6960436f-53cd-4d00-bd5b-a293349e7d1f"),
             name="My Games",
             created_by=default_user,
+            is_default=True,
         )
         CollectionGame.objects.create(game=default_game, collection=collection)
     return collection
