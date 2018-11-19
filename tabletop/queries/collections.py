@@ -15,12 +15,18 @@ class Query(object):
     collections = graphene.List(
         CollectionNode,
         id=graphene.UUID(),
+        game=graphene.UUID(),
         query=graphene.String(),
         created_by=graphene.UUID(),
     )
 
     def resolve_collections(
-        self, info, id: str = None, query: str = None, created_by: str = None
+        self,
+        info,
+        id: str = None,
+        game: str = None,
+        query: str = None,
+        created_by: str = None,
     ):
         qs = Collection.objects.all()
 
@@ -29,6 +35,9 @@ class Query(object):
 
         if id:
             qs = qs.filter(id=id)
+
+        if game:
+            qs = qs.filter(games=game)
 
         if query:
             qs = qs.filter(name__istartswith=query)
