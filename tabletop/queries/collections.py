@@ -1,4 +1,5 @@
 import graphene
+from django.db.models import Count
 
 from tabletop.models import Collection
 from tabletop.schema import CollectionNode
@@ -8,6 +9,8 @@ from tabletop.utils.graphene import optimize_queryset
 def fix_collections_query(queryset, selected_fields, **kwargs):
     if "games.image" in selected_fields:
         queryset = queryset.prefetch_related("games__image")
+    if "numGames" in selected_fields:
+        queryset = queryset.annotate(num_games=Count("games"))
     return queryset
 
 

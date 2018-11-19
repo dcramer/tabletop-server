@@ -14,6 +14,16 @@ def test_id_with_result(gql_client, default_collection, default_user):
     assert executed == {"data": {"collections": [{"id": str(default_collection.id)}]}}
 
 
+def test_id_and_num_games_with_result(gql_client, default_collection, default_user):
+    executed = gql_client.execute(
+        """{ collections(id:"%s") { id, numGames } }""" % (str(default_collection.id),),
+        user=default_user,
+    )
+    assert executed == {
+        "data": {"collections": [{"id": str(default_collection.id), "numGames": 1}]}
+    }
+
+
 def test_id_with_no_result(gql_client, default_collection, default_user):
     executed = gql_client.execute(
         """{ collections(id:"74451c13-2a97-42a2-b136-03af6cbb4153") { id } }""",
