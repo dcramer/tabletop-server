@@ -22,16 +22,15 @@ class AddCollection(graphene.Mutation):
 
         if games:
             games = Game.objects.filter(id__in=games)
-        else:
-            games = ()
 
         try:
             with transaction.atomic():
                 result = Collection.objects.create(
                     name=name, created_by=info.context.user
                 )
-                for game in games:
-                    CollectionGame.objects.create(collection=result, game=game)
+                if games:
+                    for game in games:
+                        CollectionGame.objects.create(collection=result, game=game)
 
         except IntegrityError as exc:
             if "duplicate key" in str(exc):

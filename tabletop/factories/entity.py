@@ -4,9 +4,10 @@ from .. import models
 from .user import UserFactory
 
 
-class GameFactory(factory.django.DjangoModelFactory):
+class EntityFactory(factory.django.DjangoModelFactory):
+    name = factory.Faker("name")
     confirmed = True
     created_by = factory.SubFactory(UserFactory)
 
     class Meta:
-        model = models.Game
+        model = models.Entity

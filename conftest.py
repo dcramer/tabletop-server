@@ -5,7 +5,8 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.db import transaction
 
-from tabletop.models import Checkin, Collection, CollectionGame, Entity, Game, Player, User
+from tabletop import factories
+from tabletop.models import Checkin, CollectionGame, Player
 from tabletop.root_schema import schema
 
 
@@ -28,7 +29,7 @@ def gql_client(db):
 
 @pytest.fixture
 def default_user(db):
-    user = User(
+    user = factories.UserFactory(
         id=UUID("449c76aa-ad6a-46a8-b32b-91d965e3f462"),
         name="Reel Big Phish",
         email="reel.big.phish@example.com",
@@ -40,7 +41,7 @@ def default_user(db):
 
 @pytest.fixture
 def default_publisher(db, default_user):
-    return Entity.objects.create(
+    return factories.EntityFactory.create(
         id=UUID("74451c13-2a97-42a2-b136-03af6cbb4153"),
         name="Guinea Pig Games",
         created_by=default_user,
@@ -50,7 +51,7 @@ def default_publisher(db, default_user):
 
 @pytest.fixture
 def default_artist(db, default_user):
-    return Entity.objects.create(
+    return factories.EntityFactory.create(
         id=UUID("449c76aa-2a97-42a2-b136-03af6cbb4153"),
         name="John Cusoe",
         created_by=default_user,
@@ -60,7 +61,7 @@ def default_artist(db, default_user):
 
 @pytest.fixture
 def default_designer(db, default_user):
-    return Entity.objects.create(
+    return factories.EntityFactory.create(
         id=UUID("449c76aa-2a97-42a2-b136-91d965e3f462"),
         name="John Cusoe",
         created_by=default_user,
@@ -70,7 +71,7 @@ def default_designer(db, default_user):
 
 @pytest.fixture
 def default_game(db, default_publisher, default_user):
-    return Game.objects.create(
+    return factories.GameFactory.create(
         id=UUID("76111b88-301b-4620-9c93-7c6d28f0987b"),
         name="Unsettlers of Qatan",
         created_by=default_user,
@@ -92,7 +93,7 @@ def default_checkin(db, default_game, default_user):
 @pytest.fixture
 def default_collection(db, default_game, default_user):
     with transaction.atomic():
-        collection = Collection.objects.create(
+        collection = factories.CollectionFactory.create(
             id=UUID("6960436f-53cd-4d00-bd5b-a293349e7d1f"),
             name="My Games",
             created_by=default_user,

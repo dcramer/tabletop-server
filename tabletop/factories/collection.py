@@ -4,9 +4,9 @@ from .. import models
 from .user import UserFactory
 
 
-class GameFactory(factory.django.DjangoModelFactory):
-    confirmed = True
+class CollectionFactory(factory.django.DjangoModelFactory):
+    name = factory.Faker("name")
     created_by = factory.SubFactory(UserFactory)
 
     class Meta:
-        model = models.Game
+        model = models.Collection

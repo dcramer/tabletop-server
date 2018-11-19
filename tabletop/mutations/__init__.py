@@ -14,6 +14,7 @@ from .remove_comment import RemoveComment
 from .remove_like import RemoveLike
 from .unfollow import Unfollow
 from .update_checkin import UpdateCheckin
+from .update_collection import UpdateCollection
 
 
 class RootMutation(graphene.ObjectType):
@@ -31,3 +32,4 @@ class RootMutation(graphene.ObjectType):
     removeLike = RemoveLike.Field()
     unfollow = Unfollow.Field()
     updateCheckin = UpdateCheckin.Field()
+    updateCollection = UpdateCollection.Field()
