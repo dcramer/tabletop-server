@@ -10,13 +10,14 @@ from tabletop.schema import CollectionNode
 class AddCollection(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
+        description = graphene.String(required=False)
         games = graphene.List(graphene.UUID, required=False)
 
     ok = graphene.Boolean()
     errors = graphene.List(graphene.String)
     collection = graphene.Field(CollectionNode)
 
-    def mutate(self, info, name: str, games: List[str] = None):
+    def mutate(self, info, name: str, description: str = None, games: List[str] = None):
         if not info.context.user.is_authenticated:
             return AddCollection(ok=False, errors=["Authentication required"])
 
@@ -26,7 +27,7 @@ class AddCollection(graphene.Mutation):
         try:
             with transaction.atomic():
                 result = Collection.objects.create(
-                    name=name, created_by=info.context.user
+                    name=name, description=description, created_by=info.context.user
                 )
                 if games:
                     for game in games:

@@ -10,14 +10,22 @@ from tabletop.schema import CollectionNode
 class UpdateCollection(graphene.Mutation):
     class Arguments:
         collection = graphene.UUID(required=True)
-        name = graphene.String(required=True)
+        name = graphene.String(required=False)
+        description = graphene.String(required=False)
         games = graphene.List(graphene.UUID, required=False)
 
     ok = graphene.Boolean()
     errors = graphene.List(graphene.String)
     collection = graphene.Field(CollectionNode)
 
-    def mutate(self, info, collection: str, name: str = None, games: List[str] = None):
+    def mutate(
+        self,
+        info,
+        collection: str,
+        name: str = None,
+        description: str = None,
+        games: List[str] = None,
+    ):
         current_user = info.context.user
         if not current_user.is_authenticated:
             return UpdateCollection(ok=False, errors=["Authentication required"])
@@ -47,6 +55,9 @@ class UpdateCollection(graphene.Mutation):
             if name and name != collection.name:
                 collection.name = name
                 fields.append("name")
+            if description and description != collection.description:
+                collection.description = description
+                fields.append("description")
             if fields:
                 collection.save(update_fields=fields)
         return UpdateCollection(ok=True, collection=collection)
