@@ -54,7 +54,7 @@ def get_selected_names(info):
     return results
 
 
-def optimize_queryset(qs, info, root):
+def optimize_queryset(qs, info, root, callback=None):
     """
     Pulls in available database relations to avoid N+1 queries.
 
@@ -101,4 +101,6 @@ def optimize_queryset(qs, info, root):
             prefetch.append(field.name)
     if prefetch:
         qs = qs.prefetch_related(*prefetch)
+    if callback:
+        qs = callback(qs, selected_fields)
     return qs

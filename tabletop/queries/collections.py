@@ -5,6 +5,12 @@ from tabletop.schema import CollectionNode
 from tabletop.utils.graphene import optimize_queryset
 
 
+def fix_collections_query(queryset, selected_fields):
+    if "games.image" in selected_fields:
+        queryset = queryset.prefetch_related("games__image")
+    return queryset
+
+
 class Query(object):
     collections = graphene.List(
         CollectionNode,
@@ -32,6 +38,6 @@ class Query(object):
 
         qs = qs.order_by("-created_at")
 
-        qs = optimize_queryset(qs, info, "collections")
+        qs = optimize_queryset(qs, info, "collections", fix_collections_query)
 
         return qs
