@@ -34,7 +34,7 @@ class UpdateCollection(graphene.Mutation):
             games = Game.objects.filter(id__in=games)
 
         with transaction.atomic():
-            if games:
+            if games is not None:
                 for game in games:
                     CollectionGame.objects.get_or_create(
                         collection=collection, game=game

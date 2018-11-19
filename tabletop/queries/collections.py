@@ -28,7 +28,7 @@ class Query(object):
         query: str = None,
         created_by: str = None,
     ):
-        qs = Collection.objects.all()
+        qs = Collection.objects.all().distinct()
 
         if not (id or created_by):
             return qs.none()

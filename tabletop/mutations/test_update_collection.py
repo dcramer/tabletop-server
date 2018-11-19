@@ -11,7 +11,7 @@ def test_update_collection(gql_client, default_collection, default_user):
         updateCollection(collection:"%s", name:"Updated Collection") {
             ok
             errors
-            collection {id}
+            collection { id }
         }
     }"""
         % (str(default_collection.id),),
@@ -37,7 +37,7 @@ def test_update_collection_with_games(gql_client, default_collection, default_us
         updateCollection(collection:"%s", name:"Updated Collection", games:["%s"]) {
             ok
             errors
-            collection {id}
+            collection { id }
         }
     }"""
         % (str(default_collection.id), str(new_game.id)),
