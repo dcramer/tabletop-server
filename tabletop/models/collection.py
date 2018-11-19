@@ -26,6 +26,7 @@ class Collection(models.Model):
 
     class Meta:
         app_label = "tabletop"
+        unique_together = (("name", "created_by"),)
 
     def __str__(self):
         return self.name
