@@ -1,9 +1,20 @@
+from decimal import Decimal
+
 import graphene
 from graphene_django.types import DjangoObjectType
 
+from dataclasses import dataclass
 from tabletop.models import Collection, Game, GameImage
 
 from .collection import CollectionNode
+from .decimal import DecimalField
+
+
+@dataclass
+class Rating:
+    average_score: Decimal = None
+    total_votes: int = 0
+    wilson_lower_bound: float = None
 
 
 class GameImageNode(DjangoObjectType):
@@ -25,13 +36,30 @@ class GameImageNode(DjangoObjectType):
         return url
 
 
+class RatingNode(graphene.ObjectType):
+    wilson_lower_bound = graphene.Float()
+    average_score = DecimalField()
+    total_votes = graphene.Int()
+
+
 class GameNode(DjangoObjectType):
     image = GameImageNode()
     collections = graphene.List(CollectionNode)
+    rating = graphene.Field(RatingNode)
 
     class Meta:
         name = "Game"
         model = Game
+
+    def resolve_rating(self, info):
+        result = {}
+        if hasattr(self, "rating_average_score"):
+            result["average_score"] = self.rating_average_score
+        if hasattr(self, "rating_total_votes"):
+            result["total_votes"] = self.rating_total_votes
+        if hasattr(self, "rating_wilson_lower_bound"):
+            result["wilson_lower_bound"] = self.rating_wilson_lower_bound
+        return Rating(**result)
 
     def resolve_collections(self, info):
         current_user = info.context.user

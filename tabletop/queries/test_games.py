@@ -1,4 +1,6 @@
-from tabletop.models import Game
+from decimal import Decimal
+
+from tabletop.models import Game, GameRating
 
 
 def test_empty_results(gql_client):
@@ -30,6 +32,48 @@ def test_single_result_with_collections(
                 {
                     "id": str(default_game.id),
                     "collections": [{"id": str(default_collection.id)}],
+                }
+            ]
+        }
+    }
+
+
+def test_single_result_with_ratings(
+    gql_client, default_collection, default_game, default_user
+):
+    executed = gql_client.execute(
+        """{ games { id, rating { averageScore, totalVotes, wilsonLowerBound } } }"""
+    )
+    assert executed == {
+        "data": {
+            "games": [
+                {
+                    "id": str(default_game.id),
+                    "rating": {
+                        "averageScore": None,
+                        "totalVotes": 0,
+                        "wilsonLowerBound": 0.0,
+                    },
+                }
+            ]
+        }
+    }
+
+    GameRating.objects.create(game=default_game, user=default_user, rating=4)
+
+    executed = gql_client.execute(
+        """{ games { id, rating { averageScore, totalVotes, wilsonLowerBound } } }"""
+    )
+    assert executed == {
+        "data": {
+            "games": [
+                {
+                    "id": str(default_game.id),
+                    "rating": {
+                        "averageScore": Decimal("4.0"),
+                        "totalVotes": 1,
+                        "wilsonLowerBound": 0.036459024761289004,
+                    },
                 }
             ]
         }
