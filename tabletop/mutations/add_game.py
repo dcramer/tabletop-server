@@ -1,10 +1,11 @@
+from decimal import Decimal
 from typing import List
 
 import graphene
 from django.db import IntegrityError, transaction
 
-from tabletop.models import DurationType, Entity, Game, GameEntity
-from tabletop.schema import EntityTypeEnum, GameNode
+from tabletop.models import DurationType, Entity, Game, GameEntity, GameRating
+from tabletop.schema import DecimalField, EntityTypeEnum, GameNode
 
 
 class EntityInput(graphene.InputObjectType):
@@ -21,6 +22,7 @@ class AddGame(graphene.Mutation):
         max_players = graphene.Int(required=False)
         duration = graphene.Int(required=False)
         duration_type = graphene.Argument(graphene.Enum.from_enum(DurationType))
+        rating = DecimalField(required=False)
 
     ok = graphene.Boolean()
     errors = graphene.List(graphene.String)
@@ -36,8 +38,10 @@ class AddGame(graphene.Mutation):
         max_players: int = None,
         duration: int = None,
         duration_type: DurationType = None,
+        rating: Decimal = None,
     ):
-        if not info.context.user.is_authenticated:
+        current_user = info.context.user
+        if not current_user.is_authenticated:
             return AddGame(ok=False, errors=["Authentication required"])
 
         if duration and not duration_type:
@@ -67,6 +71,11 @@ class AddGame(graphene.Mutation):
                             game=result,
                             type=entity.type,
                         )
+
+                if rating:
+                    GameRating.objects.create(
+                        game=result, user=current_user, rating=rating
+                    )
 
         except IntegrityError as exc:
             if "duplicate key" in str(exc):
