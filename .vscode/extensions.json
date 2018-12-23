@@ -4,6 +4,7 @@
     "recommendations": [
         "ms-python.python",
         "lextudio.restructuredtext",
-        "DavidAnson.vscode-markdownlint"
+        "DavidAnson.vscode-markdownlint",
+        "bungcip.better-toml"
     ]
 }

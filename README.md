@@ -5,10 +5,10 @@
 
 ```shell
 $ brew install postgresql
-$ pipenv sync
+$ poetry install
 $ createdb -E utf-8 tabletop
-$ pipenv run python manage.py migrate
-$ pipenv run python manage.py runserver
+$ poetry run tabletop migrate
+$ poetry run tabletop runserver
 ```
 
 ## API

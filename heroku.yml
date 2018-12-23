@@ -1,0 +1,6 @@
+build:
+  docker:
+    web: Dockerfile
+run:
+  web: gunicorn tabletop.wsgi --log-file -
+  release: poetry run tabletop migrate
