@@ -137,10 +137,11 @@ description = "A high-level Python Web framework that encourages rapid developme
 name = "django"
 optional = false
 python-versions = ">=3.5"
-version = "2.1.4"
+version = "2.2.10"
 
 [package.dependencies]
 pytz = "*"
+sqlparse = "*"
 
 [[package]]
 category = "main"
@@ -621,6 +622,14 @@ version = "1.12.0"
 
 [[package]]
 category = "main"
+description = "Non-validating SQL parser"
+name = "sqlparse"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "0.3.0"
+
+[[package]]
+category = "main"
 description = "The most basic Text::Unidecode port"
 name = "text-unidecode"
 optional = false
@@ -660,7 +669,7 @@ python-versions = "*"
 version = "4.1.2"
 
 [metadata]
-content-hash = "1d92e8032283f47cc27186ce551d56b4ada1632f7b805dc33cceb5902df16afa"
+content-hash = "d478b1f2d54333cc1587b126dfe4ec724fd6cd691a0116327865ed7ea8848f21"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -679,7 +688,7 @@ chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "
 click = ["2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13", "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"]
 colorama = ["05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d", "f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"]
 dj-database-url = ["4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163", "851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9"]
-django = ["068d51054083d06ceb32ce02b7203f1854256047a0d58682677dd4f81bceabd7", "55409a056b27e6d1246f19ede41c6c610e4cab549c005b62cbeefabc6433356b"]
+django = ["1226168be1b1c7efd0e66ee79b0e0b58b2caa7ed87717909cd8a57bb13a7079a", "9a4635813e2d498a3c01b10c701fe4a515d76dd290aaa792ccb65ca4ccb6b038"]
 django-enumfields = ["5b0e2dd5973337717ca6bd5a7d9e167e6ae01203c160d4761b88837c4678f219"]
 django-heroku = ["2bc690aab89eedbe01311752320a9a12e7548e3b0ed102681acc5736a41a4762", "6af4bc3ae4a9b55eaad6dbe5164918982d2762661aebc9f83d9fa49f6009514e"]
 execnet = ["a7a84d5fa07a089186a329528f127c9d73b9de57f1a1131b82bb5320ee651f6a", "fc155a6b553c66c838d1a22dba1dc9f5f505c43285a878c6f74a79c024750b83"]
@@ -725,6 +734,7 @@ rx = ["13a1d8d9e252625c173dc795471e614eadfe1cf40ffc684e08b8fff0d9748c23", "73575
 sentry-sdk = ["9f47807c9e9e39c6220779206dd7fc0de50d35af6d32470a09086f665056c641", "e81f22975cdc0688b412efb35a36b6befbc4b89830d73d91d982ef4be919cc97"]
 singledispatch = ["5b06af87df13818d14f08a028e42f566640aef80805c3b50c5056b086e3c2b9c", "833b46966687b3de7f438c761ac475213e53b306740f1abfaa86e1d1aae56aa8"]
 six = ["3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c", "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"]
+sqlparse = ["40afe6b8d4b1117e7dff5504d7a8ce07d9a1b15aeeade8a2d10f130a834f8177", "7c3dca29c022744e95b547e867cee89f4fce4373f3549ccd8797d8eb52cdb873"]
 text-unidecode = ["5a1375bb2ba7968740508ae38d92e1f889a0832913cb1c447d5e2046061a396d", "801e38bd550b943563660a91de8d4b6fa5df60a542be9093f7abf819f86050cc"]
 toml = ["229f81c57791a41d65e399fc06bf0848bab550a9dfd5ed66df18ce5f05e73d5c", "235682dd292d5899d361a811df37e04a8828a5b1da3115886b73cf81ebc9100e", "f1db651f9657708513243e61e6cc67d101a39bad662eaa9b5546f789338e07a3"]
 urllib3 = ["61bf29cada3fc2fbefad4fdf059ea4bd1b4a86d2b6d15e1c7c0b582b9752fe39", "de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22"]
