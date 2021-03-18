@@ -20,7 +20,7 @@ django-heroku = "^0.3.1"
 factory-boy = "^2.11"
 lxml = "^4.2"
 django-enumfields = "^1.0"
-pillow = "^5.3"
+pillow = "^8.1"
 
 [tool.poetry.dev-dependencies]
 isort = "==4.3.4"
